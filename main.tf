@@ -13,9 +13,9 @@ module "idt-okta-webhook" {
   name                  = "idt-okta-webhook"
   indent_webhook_secret = var.indent_webhook_secret
   artifact = {
-    artifact_bucket = "indent-artifacts-us-west-2"
-    function_key    = "webhooks/aws/lambda/okta-v0.0.1-canary-function.zip"
-    deps_key        = "webhooks/aws/lambda/okta-v0.0.1-canary-deps.zip"
+    bucket       = "indent-artifacts-us-west-2"
+    function_key = "webhooks/aws/lambda/okta-v0.0.1-canary-function.zip"
+    deps_key     = "webhooks/aws/lambda/okta-v0.0.1-canary-deps.zip"
   }
   env = {
     OKTA_DOMAIN       = var.okta_domain
