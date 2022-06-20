@@ -1,10 +1,17 @@
 # Indent + AWS Lambda and Okta
 
-This repository contains 2 integration(s) (AWS Lambda) to pull and apply updates to Okta using [Indent](https://indent.com/docs).
+This repository contains an integration between Okta and [Indent](https://indent.com). Once deployed, you will be able to use this integration with Indent to:
+
+- PullUpdate
+- ApplyUpdate
 
 ## Quicklinks
 
+- [Indent Documentation](https://indent.com/docs)
 - [Indent Support](https://support.indent.com)
+
+**In this repo**
+
 - [GitHub Secrets](./settings/secrets/actions)
 - [GitHub Actions](./actions/workflows/deploy.yaml)
 
