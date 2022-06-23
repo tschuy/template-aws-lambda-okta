@@ -8,30 +8,6 @@ on:
 env:
   AWS_REGION: us-west-2
 jobs:
-  check:
-    name: Check if ready
-    runs-on: ubuntu-latest
-    outputs:
-      ready: ${{ steps.aws.oututs.ready }}
-    steps:
-      - id: aws
-        name: Check AWS Credentials
-        run: |
-          if [ "$AWS_ACCESS_KEY_ID" == "" ]; then
-            echo "missing secret: AWS_ACCESS_KEY_ID"
-            echo ::set-output name=ready::false
-          else
-            echo ::set-output name=ready::true
-          fi
-          if [ "$AWS_SECRET_ACCESS_KEY" == "" ]; then
-          echo "missing secret: AWS_SECRET_ACCESS_KEY"
-            echo ::set-output name=ready::false
-          else
-            echo ::set-output name=ready::true
-          fi
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   terraform:
     name: Terraform
     runs-on: ubuntu-latest
@@ -43,14 +19,12 @@ jobs:
         uses: hashicorp/setup-terraform@v1
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
-        if: ${{ needs.check.outputs.ready }}
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
       - name: Add profile credentials to ~/.aws/credentials
-        if: ${{ needs.check.outputs.ready }}
         run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile default
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile default
@@ -58,14 +32,12 @@ jobs:
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check -diff
-        if: ${{ needs.check.outputs.ready }}
       - name: Terraform Init
         id: init
         run: terraform init
-        if: ${{ needs.check.outputs.ready }}
       - name: Terraform Plan
         id: plan
-        if: github.event_name == 'pull_request' && needs.check.outputs.ready
+        if: github.event_name == 'pull_request'
         run: terraform plan -input=false -no-color
         continue-on-error: true
         env:
@@ -76,7 +48,7 @@ jobs:
           TF_VAR_okta_client_id: ${{ secrets.OKTA_CLIENT_ID }}
           TF_VAR_okta_private_key: ${{ secrets.OKTA_PRIVATE_KEY }}
       - uses: actions/github-script@0.9.0
-        if: github.event_name == 'pull_request' && needs.check.outputs.ready
+        if: github.event_name == 'pull_request'
         env:
           PLAN: |-
             terraform
@@ -98,10 +70,10 @@ jobs:
               body: output
             })
       - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure' && needs.check.outputs.ready
+        if: steps.plan.outcome == 'failure'
         run: exit 1
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.check.outputs.ready
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -input=false -auto-approve
         env:
           TF_VAR_indent_webhook_secret: ${{ secrets.INDENT_WEBHOOK_SECRET }}
@@ -111,7 +83,7 @@ jobs:
           TF_VAR_okta_client_id: ${{ secrets.OKTA_CLIENT_ID }}
           TF_VAR_okta_private_key: ${{ secrets.OKTA_PRIVATE_KEY }}
       - name: Terraform Output
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.check.outputs.ready
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform output
         env:
           TF_VAR_indent_webhook_secret: ${{ secrets.INDENT_WEBHOOK_SECRET }}
