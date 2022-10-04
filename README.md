@@ -7,13 +7,8 @@ This repository contains an integration between Okta and [Indent](https://indent
 
 ## Quicklinks
 
-- [Indent Documentation](https://indent.com/docs)
+- [Indent Documentation Index](https://indent.com/docs)
 - [Indent Support](https://support.indent.com)
-
-**In this repo**
-
-- [GitHub Secrets](./settings/secrets/actions)
-- [GitHub Actions](./actions/workflows/deploy.yaml)
 
 ## Configuration
 
