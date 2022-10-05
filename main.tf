@@ -10,8 +10,8 @@ terraform {
 
 # Indent + Okta Integration
 
-# Details: https://github.com/indentapis/integrations/tree/f0cea0e363f8950c7a217d186df6c377ed52e9d7/packages/stable/indent-integration-okta
-# Last Change: https://github.com/indentapis/integrations/commit/f0cea0e363f8950c7a217d186df6c377ed52e9d7
+# Details: https://github.com/indentapis/integrations/tree/aa72a9dbd38ba7a8713410bd559f9964ba134075/packages/stable/indent-integration-okta
+# Last Change: https://github.com/indentapis/integrations/commit/aa72a9dbd38ba7a8713410bd559f9964ba134075
 
 module "idt-okta-webhook" {
   source                = "git::https://github.com/indentapis/integrations//terraform/modules/indent_runtime_aws_lambda"
@@ -19,8 +19,8 @@ module "idt-okta-webhook" {
   indent_webhook_secret = var.indent_webhook_secret
   artifact = {
     bucket       = "indent-artifacts-us-west-2"
-    function_key = "webhooks/aws/lambda/okta-f0cea0e363f8950c7a217d186df6c377ed52e9d7-function.zip"
-    deps_key     = "webhooks/aws/lambda/okta-f0cea0e363f8950c7a217d186df6c377ed52e9d7-deps.zip"
+    function_key = "webhooks/aws/lambda/okta-aa72a9dbd38ba7a8713410bd559f9964ba134075-function.zip"
+    deps_key     = "webhooks/aws/lambda/okta-aa72a9dbd38ba7a8713410bd559f9964ba134075-deps.zip"
   }
   env = {
     OKTA_DOMAIN       = var.okta_domain
