@@ -18,6 +18,25 @@ variable "okta_domain" {
   default   = ""
   sensitive = true
 }
+variable "okta_prefix" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+
+variable "okta_private_key" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+
+variable "okta_jwk_n" {
+  # just the `n` portion of the okta jwk;
+  # TF_VARS_okta_private_key="" scripts/jwk.rb
+  type      = string
+  default   = ""
+  sensitive = true
+}
 
 variable "okta_token" {
   type      = string

@@ -36,6 +36,10 @@ jobs:
         env:
           TF_CLI_ARGS: ${{ secrets.TF_CLI_ARGS }}
         run: terraform init
+      - name: Convert PEM to JWK
+        run: |
+          gem install json-jwt
+          export TF_VAR_okta_jwk_n=`ruby scripts/jwk.rb`
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
