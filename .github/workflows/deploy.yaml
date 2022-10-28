@@ -16,6 +16,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
+      - name: Convert PEM to JWK
+        run: |
+          gem install --user-install json-jwt
+          export TF_VAR_okta_jwk_n=`ruby scripts/jwk.rb`
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -36,10 +40,6 @@ jobs:
         env:
           TF_CLI_ARGS: ${{ secrets.TF_CLI_ARGS }}
         run: terraform init
-      - name: Convert PEM to JWK
-        run: |
-          gem install json-jwt
-          export TF_VAR_okta_jwk_n=`ruby scripts/jwk.rb`
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
